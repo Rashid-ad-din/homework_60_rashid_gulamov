@@ -24,3 +24,11 @@ body {
 .txt-color {
     color: #f8f9fa;
 }
+
+.error label {
+    color: #8f0000;
+}
+
+.errorlist {
+    color: #8f0000;
+}

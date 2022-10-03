@@ -15,11 +15,14 @@ class SearchForm(forms.Form):
 
 
 class ProductForm(forms.ModelForm):
+    error_css_class = 'error'
+    label_css_class = 'label'
+
     product = forms.CharField(
         label='Продукт',
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={
+        widget=widgets.TextInput(attrs={
             'class': 'form-control mt-3',
             'style': 'max-width: 750px;',
         })

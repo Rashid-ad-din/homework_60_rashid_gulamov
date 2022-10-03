@@ -14,13 +14,12 @@
         <div class="d-flex mb-3">
             <div class="d-flex justify-content-around container flex-wrap">
                 {% for product in products %}
-                    <div class="d-flex mt-3" style="width: 40%; height: 250px; font-size: 14px">
-                        <div class="card w-50 pt-3">
-                            <img src='{{ product.photo }}' style="height: 200px;">
+                    <div class="d-flex mt-4" style="width: 47%; height: 230px; font-size: 14px">
+                        <div class="card w-50">
+                            <img class="rounded" src='{{ product.photo }}' style="height: 230px;">
                         </div>
                         <div class="card w-50 bg-light">
-                            <div class="h-50 rounded aqua"
-                            >
+                            <div class="rounded aqua">
                                 <h5 class="card-title mt-1 ml-2 fw-bold"
                                     style="font-size: 18px;">{{ product.product }}</h5>
                             </div>
