@@ -5,7 +5,15 @@ from shop.models import Product, CategoryChoices
 
 
 class SearchForm(forms.Form):
-    search = forms.CharField
+    search = forms.CharField(
+        label='Поиск',
+        max_length=250,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form mt-3 ml-4',
+            'style': 'width: 350px; ',
+        })
+    )
 
     class Meta:
         model = Product
