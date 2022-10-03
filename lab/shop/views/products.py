@@ -2,15 +2,17 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import render, redirect, get_object_or_404
 
 from shop.forms import ProductForm, SearchForm
-from shop.models import Product
+from shop.models import Product, CategoryChoices
 
 
 def main_view(request: WSGIRequest):
+    categories = CategoryChoices.choices
     search_form = SearchForm
     products = Product.objects.exclude(rest=0).order_by('category', 'product')
     context = {
         'products': products,
-        'search_form': search_form
+        'search_form': search_form,
+        'categories': categories
     }
     return render(request, 'main.html', context)
 
@@ -73,3 +75,15 @@ def confirm_delete_view(request: WSGIRequest, pk):
     product = get_object_or_404(Product, pk=pk)
     product.delete()
     return redirect('main')
+
+
+def by_category_view(request: WSGIRequest, key):
+    categories = CategoryChoices.choices
+    search_form = SearchForm
+    products = Product.objects.exclude(rest=0).filter(category=key).order_by('category', 'product')
+    context = {
+        'products': products,
+        'search_form': search_form,
+        'categories': categories,
+    }
+    return render(request, 'main.html', context)

@@ -1,14 +1,37 @@
 {% extends 'base.html' %}
 
+{% block menu %}
+    <li class="nav-item pt-3">
+        <div class="dropdown">
+            <button class="btn aqua dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                Продукты по категориям
+            </button>
+            <ul class="dropdown-menu pt-0 pb-0 aqua">
+                {% for category in categories %}
+                    <li>
+                        <a class="dropdown-item aqua rounded"
+                           href="{% url 'by_category' category.0 %}">{{ category.1 }}</a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </li>
+{% endblock %}
+
 {% block content %}
 
     <h3 class="txt-color pt-3 pb-3">Магазин</h3>
+    {% if key %}
+    <h3 class="txt-color pt-3 pb-3">{{ category.get_category_display }}</h3>
+    {% endif %}
 
-        <form action="{% url 'search' %}" class="mb-3 mr-5 text-left">
-            {% csrf_token %}
-            {{ search_form.search }}
-            <input type="submit" value="Найти" class="btn-custom btn mb-1">
-        </form>
+    <form action="{% url 'search' %}" class="mb-3 mr-5 text-left">
+        {% csrf_token %}
+        {{ search_form.search }}
+        <input type="submit" value="Найти" class="btn-custom btn mb-1">
+    </form>
 
     {% if products %}
         <div class="d-flex mb-3">
@@ -23,7 +46,8 @@
                                 <h5 class="card-title mt-1 ml-2 fw-bold"
                                     style="font-size: 18px;">{{ product.product }}</h5>
                             </div>
-                            <p style="font-size: 16px;" class="card-text ml-2 h-25">{{ product.get_category_display }}</p>
+                            <p style="font-size: 16px;"
+                               class="card-text ml-2 h-25">{{ product.get_category_display }}</p>
                             <h3 class="card-text ml-2 fw-bold h-25" style="font-size: 21px">${{ product.price }}</h3>
                             <div>
                                 <a href="{% url 'product' product.pk %}"

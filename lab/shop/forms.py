@@ -4,24 +4,6 @@ from django.forms import widgets
 from shop.models import Product, CategoryChoices
 
 
-class SearchForm(forms.Form):
-    search = forms.CharField(
-        label='Поиск',
-        max_length=250,
-        required=False,
-        widget=forms.TextInput(attrs={
-            'class': 'form mt-3 ml-4',
-            'style': 'width: 350px; ',
-        })
-    )
-
-    class Meta:
-        model = Product
-        fields = [
-            'product'
-        ]
-
-
 class ProductForm(forms.ModelForm):
     error_css_class = 'error'
     label_css_class = 'label'
@@ -97,4 +79,22 @@ class ProductForm(forms.ModelForm):
             'category',
             'rest',
             'price'
+        ]
+
+
+class SearchForm(forms.Form):
+    search = forms.CharField(
+        label='Поиск',
+        max_length=250,
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form mt-3 ml-4',
+            'style': 'width: 350px; ',
+        })
+    )
+
+    class Meta:
+        model = Product
+        fields = [
+            'product'
         ]
