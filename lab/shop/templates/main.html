@@ -24,14 +24,10 @@
 
     <h3 class="txt-color pt-3 pb-3">Магазин</h3>
     {% if key %}
-    <h3 class="txt-color pt-3 pb-3">{{ category.get_category_display }}</h3>
+        <h3 class="txt-color pt-3 pb-3">{{ category.get_category_display }}</h3>
     {% endif %}
 
-    <form action="{% url 'search' %}" class="mb-3 mr-5 text-left">
-        {% csrf_token %}
-        {{ search_form.search }}
-        <input type="submit" value="Найти" class="btn-custom btn mb-1">
-    </form>
+    {% include 'partial/search.html' %}
 
     {% if products %}
         <div class="d-flex mb-3">
@@ -61,6 +57,9 @@
                 {% endfor %}
             </div>
         </div>
+        {% if is_paginated %}
+            {% include 'partial/pagination.html' %}
+        {% endif %}
 
     {% else %}
         <p class="mt-5 ml-3 fw-bold">Список продуктов пуст</p>

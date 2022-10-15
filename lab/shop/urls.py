@@ -1,15 +1,14 @@
 from django.urls import path
 
-from shop.views.products import add_view, main_view, product_view, search_view, edit_view, delete_view, \
-    confirm_delete_view, by_category_view
+from shop.views.products import ProductsView, \
+    ProductView, ProductAddView, ProductEditView, ProductDeleteView, ProductsByCategoryView
 
 urlpatterns = [
-    path('', main_view, name='main'),
-    path('add/', add_view, name='add_product'),
-    path('search/', search_view, name='search'),
-    path('products/<pk>/', product_view, name='product'),
-    path('edit/<pk>/', edit_view, name='edit_product'),
-    path('delete/<pk>/', delete_view, name='delete_product'),
-    path('confirm_delete/<pk>/', confirm_delete_view, name='confirm_delete_product'),
-    path('category/<key>/', by_category_view, name='by_category'),
+    path('', ProductsView.as_view(), name='main'),
+    path('add/', ProductAddView.as_view(), name='add_product'),
+    path('products/<pk>/', ProductView.as_view(), name='product'),
+    path('edit/<pk>/', ProductEditView.as_view(), name='edit_product'),
+    path('delete/<pk>/', ProductDeleteView.as_view(), name='delete_product'),
+    path('confirm_delete/<pk>/', ProductDeleteView.as_view(), name='confirm_delete_product'),
+    path('category/<key>/', ProductsByCategoryView.as_view(), name='by_category'),
 ]

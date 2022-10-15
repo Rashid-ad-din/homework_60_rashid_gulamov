@@ -1,89 +1,125 @@
-from django.core.handlers.wsgi import WSGIRequest
-from django.shortcuts import render, redirect, get_object_or_404
+from urllib.parse import urlencode
 
-from shop.forms import ProductForm, SearchForm
-from shop.models import Product, CategoryChoices
+from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import get_object_or_404
+from django.urls import reverse, reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-
-def main_view(request: WSGIRequest):
-    categories = CategoryChoices.choices
-    search_form = SearchForm
-    products = Product.objects.exclude(rest=0).order_by('category', 'product')
-    context = {
-        'products': products,
-        'search_form': search_form,
-        'categories': categories
-    }
-    return render(request, 'main.html', context)
+from shop.forms.product import ProductForm, SearchForm
+from shop.models.product import Product, CategoryChoices
 
 
-def search_view(request: WSGIRequest):
-    search_form = SearchForm
-    search = request.GET.get('search')
-    products = Product.objects.exclude(rest=0).filter(product__icontains=search).order_by('category', 'product')
-    context = {
-        'products': products,
-        'search_form': search_form,
-    }
-    return render(request, 'main.html', context)
+class SuccessDetailUrlMixin:
+    def get_success_url(self):
+        return reverse('product', kwargs={'pk': self.object.pk})
 
 
-def add_view(request: WSGIRequest):
-    if request.method == 'GET':
-        product_form = ProductForm
-        return render(request, 'add_product.html', context={'product_form': product_form})
-    product_form = ProductForm(request.POST)
-    if not product_form.is_valid():
-        return render(request, 'add_product.html', context={'product_form': product_form})
-    product = product_form.save()
-    return redirect('main')
+class ProductsView(ListView):
+    template_name = 'main.html'
+    model = Product
+    context_object_name = 'products'
+    queryset = Product.objects.exclude(rest=0).order_by('category', 'product')
+    paginate_by = 5
+    extra_context = {'categories': CategoryChoices.choices}
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_search_form()
+        self.search_value = self.get_search_value()
+        return super().get(request, *args, **kwargs)
+
+    def get_search_form(self):
+        return SearchForm(self.request.GET)
+
+    def get_search_value(self):
+        if self.form.is_valid():
+            return self.form.cleaned_data.get('search')
+        return None
+
+    def get_queryset(self):
+        queryset = super().get_queryset().all()
+        if self.search_value:
+            query = Q(product__icontains=self.search_value) | Q(description__icontains=self.search_value)
+            queryset = queryset.filter(query)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['form'] = self.form
+        if self.search_value:
+            context['query'] = urlencode({'search': self.search_value})
+        return context
 
 
-def product_view(request: WSGIRequest, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'product.html', context={'product': product})
+class ProductView(DetailView):
+    template_name = 'product.html'
+    model = Product
+
+    def get_object(self, **kwargs):
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        product = get_object_or_404(Product, pk=pk)
+
+        if product.rest <= 0:
+            raise Http404('Product not found')
+        return product
 
 
-def edit_view(request: WSGIRequest, pk):
-    product = get_object_or_404(Product, pk=pk)
-    product_form = ProductForm(initial={
-        'product': product.product,
-        'description': product.description,
-        'photo': product.photo,
-        'category': product.category,
-        'rest': product.rest,
-        'price': product.price
-    })
-    if request.method == 'GET':
-        return render(request, 'edit_product.html',
-                      context={'product': product, 'product_form': product_form})
-    form = ProductForm(request.POST)
-    if not form.is_valid():
-        return render(request, 'edit_product.html',
-                      context={'product': product, 'product_form': product_form})
-    product_form = ProductForm(request.POST)
-    product = product_form.save()
-    return redirect('product', pk=product.pk)
+class ProductAddView(SuccessDetailUrlMixin, CreateView):
+    template_name = 'add_product.html'
+    model = Product
+    form_class = ProductForm
+
+    def form_valid(self, form):
+        project = get_object_or_404(Product, pk=self.kwargs.get('pk'))
+        form.instance.project = project
+        return super().form_valid(form)
 
 
-def delete_view(request: WSGIRequest, pk):
-    product = get_object_or_404(Product, pk=pk)
-    return render(request, 'delete_product.html', context={'product': product})
+class ProductEditView(SuccessDetailUrlMixin, UpdateView):
+    template_name = 'edit_product.html'
+    model = Product
+    form_class = ProductForm
 
 
-def confirm_delete_view(request: WSGIRequest, pk):
-    product = get_object_or_404(Product, pk=pk)
-    product.delete()
-    return redirect('main')
+class ProductDeleteView(DeleteView):
+    template_name = 'delete_product.html'
+    model = Product
+    success_url = reverse_lazy('main')
 
 
-def by_category_view(request: WSGIRequest, key):
-    categories = CategoryChoices.choices
-    search_form = SearchForm
-    products = Product.objects.exclude(rest=0).filter(category=key).order_by('category', 'product')
-    context = {
-        'products': products,
-        'search_form': search_form,
-        'categories': categories,
-    }
-    return render(request, 'main.html', context)
+class ProductsByCategoryView(ListView):
+    template_name = 'main.html'
+    model = Product
+    context_object_name = 'products'
+    # queryset = Product.objects.exclude(rest=0).order_by('category', 'product')
+    paginate_by = 5
+    extra_context = {'categories': CategoryChoices.choices}
+
+    def get(self, request, *args, **kwargs):
+        self.form = self.get_search_form()
+        self.search_value = self.get_search_value()
+        self.key = self.kwargs.get('key')
+        return super().get(request, *args, **kwargs)
+
+    def get_search_form(self):
+        return SearchForm(self.request.GET)
+
+    def get_search_value(self):
+        if self.form.is_valid():
+            return self.form.cleaned_data.get('search')
+        return None
+
+    def get_queryset(self):
+        queryset = Product.objects.exclude(rest=0).order_by('category', 'product').filter(category=
+                                                                                          self.kwargs['key'])
+        if self.search_value:
+            query = Q(product__icontains=self.search_value) | Q(description__icontains=self.search_value)
+            queryset = queryset.filter(query)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['form'] = self.form
+        if self.search_value:
+            context['query'] = urlencode({'search': self.search_value})
+        return context
