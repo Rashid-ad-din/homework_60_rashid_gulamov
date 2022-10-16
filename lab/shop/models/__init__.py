@@ -1,2 +1,2 @@
-from .product import Product
-from .cart import Cart
+from .products import Product
+from .carts import Cart

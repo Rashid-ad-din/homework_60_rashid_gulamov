@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'products/../base.html' %}
 
 {% block menu %}
     <li class="nav-item pt-3">
@@ -14,9 +14,13 @@
                            href="{% url 'by_category' category.0 %}">{{ category.1 }}</a>
                     </li>
                 {% endfor %}
-
             </ul>
         </div>
+    </li>
+    <li class="nav-item ml-3">
+            <a class="nav-link text-warning text-light pt-3" href="{% url 'cart' %}">
+                <i class="bi bi-cart4"></i>
+            </a>
     </li>
 {% endblock %}
 
@@ -47,17 +51,17 @@
                             <h3 class="card-text ml-2 fw-bold h-25" style="font-size: 21px">${{ product.price }}</h3>
                             <div class="d-flex justify-content-around">
                                 <div>
-                                <a href="{% url 'product' product.pk %}"
-                                   class="btn aqua mt-3 mb-2 ml-2">
-                                    Подробнее
-                                </a>
-                            </div>
-                            <div>
-                                <a href="{% url 'add_to_cart' product.pk %}"
-                                   class="btn aqua mt-3 mb-2 ml-2">
-                                    В корзину
-                                </a>
-                            </div>
+                                    <a href="{% url 'product' product.pk %}"
+                                       class="btn aqua mt-3 mb-2 ml-2">
+                                        Подробнее
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="{% url 'add_to_cart' product.pk %}"
+                                       class="btn aqua mt-3 mb-2 ml-2">
+                                        В корзину
+                                    </a>
+                                </div>
                             </div>
 
 

@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import widgets
 
-from shop.models.product import Product, CategoryChoices
+from shop.models.products import Product, CategoryChoices
 
 
 class ProductForm(forms.ModelForm):

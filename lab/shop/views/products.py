@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
 from shop.forms.product import ProductForm, SearchForm
-from shop.models.product import Product, CategoryChoices
+from shop.models.products import Product, CategoryChoices
 
 
 class SuccessDetailUrlMixin:
@@ -16,10 +16,9 @@ class SuccessDetailUrlMixin:
 
 
 class ProductsView(ListView):
-    template_name = 'main.html'
+    template_name = 'products/main.html'
     model = Product
     context_object_name = 'products'
-    queryset = Product.objects.exclude(rest=0).order_by('category', 'product')
     paginate_by = 5
     extra_context = {'categories': CategoryChoices.choices}
 
@@ -37,7 +36,7 @@ class ProductsView(ListView):
         return None
 
     def get_queryset(self):
-        queryset = super().get_queryset().all()
+        queryset = Product.objects.exclude(rest=0).order_by('category', 'product')
         if self.search_value:
             query = Q(product__icontains=self.search_value) | Q(description__icontains=self.search_value)
             queryset = queryset.filter(query)
@@ -52,7 +51,7 @@ class ProductsView(ListView):
 
 
 class ProductView(DetailView):
-    template_name = 'product.html'
+    template_name = 'products/product.html'
     model = Product
 
     def get_object(self, **kwargs):
@@ -65,7 +64,7 @@ class ProductView(DetailView):
 
 
 class ProductAddView(SuccessDetailUrlMixin, CreateView):
-    template_name = 'add_product.html'
+    template_name = 'products/add_product.html'
     model = Product
     form_class = ProductForm
 
@@ -76,22 +75,21 @@ class ProductAddView(SuccessDetailUrlMixin, CreateView):
 
 
 class ProductEditView(SuccessDetailUrlMixin, UpdateView):
-    template_name = 'edit_product.html'
+    template_name = 'products/edit_product.html'
     model = Product
     form_class = ProductForm
 
 
 class ProductDeleteView(DeleteView):
-    template_name = 'delete_product.html'
+    template_name = 'products/delete_product.html'
     model = Product
     success_url = reverse_lazy('main')
 
 
 class ProductsByCategoryView(ListView):
-    template_name = 'main.html'
+    template_name = 'products/main.html'
     model = Product
     context_object_name = 'products'
-    # queryset = Product.objects.exclude(rest=0).order_by('category', 'product')
     paginate_by = 5
     extra_context = {'categories': CategoryChoices.choices}
 
