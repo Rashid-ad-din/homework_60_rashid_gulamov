@@ -27,7 +27,7 @@ class Product(models.Model):
     changed_at = models.DateTimeField(verbose_name='Дата изменения', auto_now=True)
 
     def __str__(self):
-        return f"Продукт: {self.product} \nКатегория: {self.category} \nОстаток: {self.rest} \nСтоимость: {self.price}"
+        return f"Продукт: {self.product}, \nКатегория: {self.category}, \nСтоимость: {self.price},\n"
 
     class Meta:
         verbose_name = 'Продукт'

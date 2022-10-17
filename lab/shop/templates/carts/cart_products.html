@@ -3,9 +3,9 @@
 
 {% block content %}
 
+    <h3 class="txt-color pt-3 pb-3">Корзина</h3>
+
     {% if cart %}
-        <form action="" method="post">
-            {% csrf_token %}
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -45,7 +45,8 @@
 
             {% else %}
             <p class="mt-5 ml-3 fw-bold">Корзина пуста</p>
-        </form>
     {% endif %}
+
+    {% include 'partial/../orders/add_order.html' %}
 
 {% endblock %}

@@ -7,7 +7,7 @@
 
         <h3 class="pl-3 pb-2">Удаление продукта из корзины</h3>
 
-        <h1 class="text-center" style="color: red; font-size: 21px;">Вы точно хотите удалить продукт? <br>
+        <h1 class="text-center" style="color: red; font-size: 21px;">Вы точно хотите удалить продукт из корзины? <br>
             "{{ product }}"?
         </h1>
         <form method="POST" action="{% url "confirm_delete_cart_product" product.pk %}" class="text-center">
