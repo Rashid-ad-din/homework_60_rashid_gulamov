@@ -676,6 +676,44 @@
   }
 },
 {
+  "model": "shop.order",
+  "pk": 21,
+  "fields": {
+    "name": "Ali",
+    "phone": "707",
+    "address": "Аксай",
+    "created_at": "2022-10-18T09:47:29.857Z",
+    "products": [
+      2,
+      3,
+      4,
+      6,
+      22
+    ]
+  }
+},
+{
+  "model": "shop.order",
+  "pk": 22,
+  "fields": {
+    "name": "Елена",
+    "phone": "701",
+    "address": "Карасай",
+    "created_at": "2022-10-18T09:49:40.916Z",
+    "products": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      22,
+      27,
+      28,
+      29
+    ]
+  }
+},
+{
   "model": "shop.orderproductamount",
   "pk": 1,
   "fields": {
@@ -726,6 +764,132 @@
   "fields": {
     "order": 20,
     "product": 5,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 7,
+  "fields": {
+    "order": 21,
+    "product": 4,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 8,
+  "fields": {
+    "order": 21,
+    "product": 6,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 9,
+  "fields": {
+    "order": 21,
+    "product": 3,
+    "order_amount": 2
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 10,
+  "fields": {
+    "order": 21,
+    "product": 22,
+    "order_amount": 2
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 11,
+  "fields": {
+    "order": 21,
+    "product": 2,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 12,
+  "fields": {
+    "order": 22,
+    "product": 3,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 13,
+  "fields": {
+    "order": 22,
+    "product": 22,
+    "order_amount": 2
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 14,
+  "fields": {
+    "order": 22,
+    "product": 2,
+    "order_amount": 4
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 15,
+  "fields": {
+    "order": 22,
+    "product": 5,
+    "order_amount": 2
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 16,
+  "fields": {
+    "order": 22,
+    "product": 4,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 17,
+  "fields": {
+    "order": 22,
+    "product": 6,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 18,
+  "fields": {
+    "order": 22,
+    "product": 27,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 19,
+  "fields": {
+    "order": 22,
+    "product": 29,
+    "order_amount": 1
+  }
+},
+{
+  "model": "shop.orderproductamount",
+  "pk": 20,
+  "fields": {
+    "order": 22,
+    "product": 28,
     "order_amount": 1
   }
 }
