@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import RedirectView, DeleteView, TemplateView
+from django.views.generic import RedirectView, DeleteView, ListView
 
 from shop.forms.orders import OrderForm
 from shop.models import Cart, Product
@@ -15,22 +15,17 @@ class AddProductToCart(RedirectView):
         return redirect('main')
 
 
-class CartView(TemplateView):
+class CartView(ListView):
     template_name = 'carts/cart_products.html'
+    model = Product
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-
-        form = OrderForm()
-        context['form'] = form
-
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
         cart = Cart.objects.all()
         context['cart'] = cart
-
-        total = Cart.get_total(cart)
-        context['total'] = total
-
-        return self.render_to_response(context)
+        context['form'] = OrderForm()
+        context['total'] = Cart.get_total(cart)
+        return context
 
 
 class CartProductDeleteView(DeleteView):
